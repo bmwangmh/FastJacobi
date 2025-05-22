@@ -74,7 +74,19 @@ int main(void) {
   } else {
     puts("x-x-x-Invalid-x-x-x");
   }
-
+  // for(int i=1;i<=10;i++){
+  //   for(int j=1;j<=10;j++){
+  //     printf("%f ",p[i*N+j]);
+  //   }
+  //   printf("\n");
+  // }
+  // printf("---------------\n");
+  // for(int i=1;i<=10;i++){
+  //   for(int j=1;j<=10;j++){
+  //     printf("%f ",ref_p[i*N+j]);
+  //   }
+  //   printf("\n");
+  // }
   free(ref_p);
   free(ref_p_next);
   free(p);
