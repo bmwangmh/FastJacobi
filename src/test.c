@@ -13,6 +13,8 @@ int step = 2000; // Number of update steps
 void baseline(int N, int step, double *p, double *p_next);
 void impl(int N, int step, double *p);
 void impl_row(int N, int step, double *p);
+void impl_col(int N, int step, double *p);
+void impl_col_SIMD(int N, int step, double *p);
 
 double record [100];
 int rp = 0;
@@ -70,7 +72,7 @@ void test(bool baseline_flag) {
   display_time(start, end);
 
   clock_gettime(CLOCK_MONOTONIC, &start);
-  impl_row(N, step, p_rol);
+  impl_col_SIMD(N, step, p_rol);
   clock_gettime(CLOCK_MONOTONIC, &end);
   printf("Impl_row: ");
   display_time(start, end);
@@ -81,7 +83,7 @@ void test(bool baseline_flag) {
   clock_gettime(CLOCK_MONOTONIC, &end);
   printf("Yours:    ");
   display_time(start, end);
-  if (is_legal_answer(N, ref_p, ref_p_next, p)) {
+  if (is_legal_answer(N, ref_p, ref_p_next, p_rol)) {
     puts("-------Pass-------");
   } else {
     puts("x-x-x-Invalid-x-x-x");
