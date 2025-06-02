@@ -11,10 +11,13 @@ int step = 2000; // Number of update steps
 #define EPS 1e-5
 
 void baseline(int N, int step, double *p, double *p_next);
-void impl(int N, int step, double *p);
+#ifdef NOCUDA
 void impl_row(int N, int step, double *p);
 void impl_col(int N, int step, double *p);
 void impl_col_SIMD(int N, int step, double *p);
+#else
+void impl_CUDA(int N, int step, double *p);
+#endif
 
 double record [100];
 int rp = 0;
@@ -72,14 +75,18 @@ void test(bool baseline_flag) {
   display_time(start, end);
 
   clock_gettime(CLOCK_MONOTONIC, &start);
+#ifdef NOCUDA
   impl_col_SIMD(N, step, p_rol);
+#else
+  impl_CUDA(N, step, p_rol);
+#endif
   clock_gettime(CLOCK_MONOTONIC, &end);
   printf("Impl_row: ");
   display_time(start, end);
 
   // your implementation
   clock_gettime(CLOCK_MONOTONIC, &start);
-  impl(N, step, p);
+  // impl(N, step, p);
   clock_gettime(CLOCK_MONOTONIC, &end);
   printf("Yours:    ");
   display_time(start, end);
@@ -88,19 +95,6 @@ void test(bool baseline_flag) {
   } else {
     puts("x-x-x-Invalid-x-x-x");
   }
-  // for(int i=1;i<=10;i++){
-  //   for(int j=1;j<=10;j++){
-  //     printf("%f ",p[i*N+j]);
-  //   }
-  //   printf("\n");
-  // }
-  // printf("---------------\n");
-  // for(int i=1;i<=10;i++){
-  //   for(int j=1;j<=10;j++){
-  //     printf("%f ",ref_p[i*N+j]);
-  //   }
-  //   printf("\n");
-  // }
   free(ref_p);
   free(ref_p_next);
   free(p_rol);

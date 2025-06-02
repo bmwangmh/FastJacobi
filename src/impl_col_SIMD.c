@@ -7,8 +7,8 @@
 #define d(i, j) ((i) * N + (j))
 #define f(i, j) ((i) * N / 2 + ((j) / 2))
 void impl_col_SIMD(int N, int step, double *p) {
-    double *p1 = _aligned_malloc((N / 2 + 2) * N * sizeof(double), 32);
-    double *p2 = _aligned_malloc((N / 2 + 2) * N * sizeof(double), 32);
+    double *p1 = aligned_alloc(32, (N / 2 + 2) * N * sizeof(double));
+    double *p2 = aligned_alloc(32, (N / 2 + 2) * N * sizeof(double));
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
             if((i + j) % 2 == 0) p1[f(i, j)] = p[d(i, j)];
@@ -62,6 +62,6 @@ void impl_col_SIMD(int N, int step, double *p) {
             else p[d(i, j)] = p2[f(i, j)];
         }
     }
-    _aligned_free(p1);
-    _aligned_free(p2);
+    free(p1);
+    free(p2);
 }
